@@ -7,13 +7,15 @@ import LockOutlinedIcon from "@mui/icons-material/LockClockOutlined";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
+import api from "../axios/axios";
 
 function Cadastro() {
   const [user, setUser] = useState({
     name: "",
-    idade:"",
+    idade: "",
     email: "",
     password: "",
+    data_nascimento: "",
   });
 
   const onChange = (event) => {
@@ -23,8 +25,21 @@ function Cadastro() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    alert("Nome:"+user.name+" "+"Idade:"+user.name+" "+"Email:" + user.email + " " + "Senha:" + user.password);
+    cadastro();
+    // alert("Nome:"+user.name+" "+"Idade:"+user.name+" "+"Email:" + user.email + " " + "Senha:" + user.password);
   };
+
+  async function cadastro() {
+    await api.postCadastro(user).then(
+      (response) => {
+        alert(response.data.message);
+      },
+      (error) => {
+        console.log(error);
+        alert(error.response.data.error);
+      }
+    );
+  }
 
   return (
     <Container component="main" maxWidth="sm">
@@ -58,16 +73,24 @@ function Cadastro() {
             value={user.name}
             onChange={onChange}
           />
-
           <TextFields
             required
             fullWidth
-            id="age"
-            label="Idade"
-            name="age"
+            id="cpf"
+            label="Cpf"
+            name="cpf"
             margin="normal"
-            type="number"
-            value={user.age}
+            value={user.cpf}
+            onChange={onChange}
+          />
+          <TextFields
+            required
+            fullWidth
+            id="data_nascimento"
+            name="data_nascimento"
+            margin="normal"
+            type="date"
+            value={user.data_nascimento}
             onChange={onChange}
           />
 
@@ -81,6 +104,7 @@ function Cadastro() {
             value={user.email}
             onChange={onChange}
           />
+
           <TextFields
             required
             fullWidth
